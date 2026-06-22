@@ -3,7 +3,6 @@ FROM composer:2 AS composer_dependencies
 WORKDIR /var/www/html
 COPY composer.json composer.lock* ./
 RUN composer install \
-    --no-dev \
     --no-interaction \
     --prefer-dist \
     --no-scripts \
@@ -28,7 +27,7 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 COPY . .
 COPY --from=composer_dependencies /var/www/html/vendor ./vendor
 
-RUN composer dump-autoload --optimize --no-dev \
+RUN composer dump-autoload --optimize \
     && chown -R www-data:www-data storage bootstrap/cache \
     && chmod +x docker/entrypoint.sh
 
